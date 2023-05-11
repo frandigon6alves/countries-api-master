@@ -3,29 +3,7 @@ const btn_selection_title = document.querySelector("#btn-selection-title");
 const searchInput = document.querySelector("#input-field-country");
 const countriesSection = document.querySelector("#countries-selection-box");
 
-const card= `
-<div class="card">
-  <button
-    class="country-flag"
-    aria-label="open Albania details"
-    style='background-image: url("https://flagcdn.com/al.svg");'
-  ></button>
-  <div class="country-info-box">
-    <h2 class="country-name">Albania</h2>
-    <p>
-      <span>Population: </span>
-      <span>2,837,743</span>
-    </p>
-    <p>
-      <span>Region: </span>
-      <span>Europe</span>
-    </p>
-    <p>
-      <span>Capital: </span>
-      <span>Tirana</span>
-    </p>
-  </div>
-</div>`;
+
 
 function toggleDarkMode() {
   document.querySelector("html").classList.toggle("dark-mode");
@@ -39,22 +17,50 @@ function init() {
 
 window.onload = init();
 
-async function searchCountry() {
-  if (searchInput.value.length < 0) {
-    return;
+async function searchCountry(event) {
+  if(event.key==`Backspace` && searchInput.value.length < 3){
+    countriesSection.innerHTML= "";
+  }
+  if (searchInput.value.length < 3) {
+   return;
   }
   const data = await fetch(
     "https://restcountries.com/v3.1/name/" + searchInput.value
   );
   const countries = await data.json();
   console.log(countries);
-
+  countriesSection.innerHTML= "";
+  
   countries.forEach(country => {
-  countriesSection.appendChild(card);
+  countriesSection.innerHTML+=`
+  <div class="card">
+    <button
+      class="country-flag"
+      aria-label="open"
+      style='background-image: url(${country.flags.png});'
+    ></button>
+    <div class="country-info-box">
+      <h2 class="country-name">${country.name.common}</h2>
+      <p>
+        <span>Population: </span>
+        <span>${country.population}</span>
+      </p>
+      <p>
+        <span>Region:</span>
+        <span>${country.region}</span>
+      </p>
+      <p>
+        <span>Capital: </span>
+        <span>${country.capital}</span>
+      </p>
+    </div>
+  </div>`;
     
   });
 }
 
 searchInput.addEventListener("keyup", searchCountry);
+
+
 
 
