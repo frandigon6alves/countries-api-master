@@ -14,6 +14,9 @@
   --element-color: hsl(209, 23%, 22%);
   --accent-color: hsl(207, 26%, 17%);
 }
+body,html{
+  height: 100% !important;
+}
 
 * {
   margin: 0;
